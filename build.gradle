@@ -28,6 +28,14 @@ dependencies {
     implementation("org.javassist:javassist:3.21.0-GA")
     implementation("org.springframework:spring-expression:4.3.6.RELEASE")
 
+
+   // implementation "jakarta.xml.bind:jaxb-api:2.3.2"
+   // implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"    	
+    
+//compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.3'
+//compile group: '', name: '', version: '2.3.3'
+
     // We want docx-stamper to be usable with any docx4j version, so the dependency to docx4J
     // has to be provided by the client.
     compileOnly("org.docx4j:docx4j:${docx4JVersion}")

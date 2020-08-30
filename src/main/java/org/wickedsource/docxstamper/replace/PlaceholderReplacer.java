@@ -1,8 +1,12 @@
 package org.wickedsource.docxstamper.replace;
 
+import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.wml.Br;
 import org.docx4j.wml.P;
@@ -137,6 +141,26 @@ public class PlaceholderReplacer<T> {
       RunUtil.applyParagraphStyle(p.getParagraph(), (R) replacementObject);
     }
     p.replace(placeholder, replacementObject);
+  }
+  
+  public Set<String> getPlaceholders(WordprocessingMLPackage document) throws Docx4JException {
+  	Set<String> placeholders = new HashSet<>();
+  	CoordinatesWalker walker = new BaseCoordinatesWalker(document) {
+          @Override
+          protected void onParagraph(ParagraphCoordinates paragraphCoordinates) {
+          	resolveExpressionsForParagraph(paragraphCoordinates.getParagraph(),placeholders);
+          }
+        };
+    walker.walk();
+    return placeholders;
+  }
+  
+ 
+  private void resolveExpressionsForParagraph(P p,Set<String> placeholderSet) {
+  	 List<String> placeholders = expressionUtil.findVariableExpressions(new ParagraphWrapper(p).getText());
+  	 for(String expressionString:placeholders) {
+  		 placeholderSet.add(expressionUtil.stripExpression(expressionString));    		
+  	 }
   }
 
 }
