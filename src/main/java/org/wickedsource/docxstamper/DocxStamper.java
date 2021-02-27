@@ -1,5 +1,6 @@
 package org.wickedsource.docxstamper;
 
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.wickedsource.docxstamper.api.DocxStamperException;
 import org.wickedsource.docxstamper.api.commentprocessor.ICommentProcessor;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -160,6 +162,11 @@ public class DocxStamper<T> {
     return proxyBuilder;
   }
 
+  public Set<String> getPlaceholders(InputStream template) throws Docx4JException{
+	  WordprocessingMLPackage document = WordprocessingMLPackage.load(template);
+	  return placeholderReplacer.getPlaceholders(document);
+  }
+  
   private void replaceExpressions(WordprocessingMLPackage document, ProxyBuilder<T> proxyBuilder) {
     placeholderReplacer.resolveExpressions(document, proxyBuilder);
   }

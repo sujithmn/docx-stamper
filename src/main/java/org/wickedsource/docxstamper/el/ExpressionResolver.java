@@ -1,5 +1,7 @@
 package org.wickedsource.docxstamper.el;
 
+import java.util.Map;
+
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -19,6 +21,7 @@ public class ExpressionResolver {
     public ExpressionResolver(EvaluationContextConfigurer evaluationContextConfigurer) {
         this.evaluationContextConfigurer = evaluationContextConfigurer;
     }
+    
 
     /**
      * Runs the given expression against the given context object and returns the result of the evaluated expression.
@@ -30,6 +33,9 @@ public class ExpressionResolver {
     public Object resolveExpression(String expressionString, Object contextRoot) {
         if ((expressionString.startsWith("${") || expressionString.startsWith("#{")) && expressionString.endsWith("}")) {
             expressionString = expressionUtil.stripExpression(expressionString);
+        }
+        if(contextRoot instanceof Map) {
+        	 return ((Map)contextRoot).get(expressionString);
         }
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext(contextRoot);
